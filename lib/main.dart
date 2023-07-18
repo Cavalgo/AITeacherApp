@@ -2,7 +2,6 @@ import 'package:ai_chat_voice/bloc/navigation_bloc/navigation_bloc.dart';
 import 'package:ai_chat_voice/bloc/navigation_bloc/navigation_state.dart';
 import 'package:ai_chat_voice/views/chat_gpt3/chat_gpt3_view.dart';
 import 'package:ai_chat_voice/pallet.dart';
-import 'package:ai_chat_voice/views/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

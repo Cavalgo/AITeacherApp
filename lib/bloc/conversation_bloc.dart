@@ -33,8 +33,8 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
     });
     on<ConversationEventStartListening>(
       (event, emit) async {
+        await mySTT.startListening();
         emit(const ConversationStateListening());
-        mySTT.startListening();
       },
     );
     on<ConversationEventStopListening>(
