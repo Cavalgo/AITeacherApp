@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 typedef NavigateFunction = void Function();
 
@@ -7,9 +6,9 @@ class Features extends StatelessWidget {
   final Color color;
   final String title;
   final String text;
-  NavigateFunction myNavFunc;
+  final NavigateFunction myNavFunc;
 
-  Features({
+  const Features({
     super.key,
     required this.color,
     required this.title,

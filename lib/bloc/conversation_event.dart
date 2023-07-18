@@ -38,6 +38,6 @@ class ConversationEventCancelButton extends ConversationEvent {
 }
 
 class ConversationEventSendTextMessage extends ConversationEvent {
-  String message;
-  ConversationEventSendTextMessage(this.message);
+  final String message;
+  const ConversationEventSendTextMessage(this.message);
 }
