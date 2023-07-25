@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "461358358853",
+    "project_id": "my-ai-voice-assistant",
+    "storage_bucket": "my-ai-voice-assistant.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:461358358853:android:073cf535c728e62d1e1e2c",
+        "android_client_info": {
+          "package_name": "com.cavalgo.ai_chat_voice.ai_chat_voice"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "461358358853-8te31pfkvlib9n97b5cd88emnag1av9o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAP4zmF6cqtVBKFnfWSABvTbCULRvl8Is0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "461358358853-8te31pfkvlib9n97b5cd88emnag1av9o.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "461358358853-08li51o1mo1tqmcj5c9j345skjumibgt.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.cavalgo.aichatvoice.aiChatVoice"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
