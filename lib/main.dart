@@ -1,15 +1,23 @@
-import 'package:ai_chat_voice/bloc/navigation_bloc/navigation_bloc.dart';
-import 'package:ai_chat_voice/bloc/navigation_bloc/navigation_state.dart';
-import 'package:ai_chat_voice/views/chat_gpt3/chat_gpt3_view.dart';
-import 'package:ai_chat_voice/pallet.dart';
+import 'package:ai_chat_voice/bloc/auth_bloc/auth_bloc.dart';
+import 'package:ai_chat_voice/bloc/auth_bloc/auth_event.dart';
+import 'package:ai_chat_voice/bloc/auth_bloc/auth_state.dart';
+import 'package:ai_chat_voice/services/authentication/fb_auth_service.dart';
+import 'package:ai_chat_voice/services/firestore/fs_provider.dart';
+import 'package:ai_chat_voice/services/firestore/fs_service.dart';
+import 'package:ai_chat_voice/utilities/pallet.dart';
+import 'package:ai_chat_voice/views/home_page/home_page.dart';
 import 'package:ai_chat_voice/views/log-in-view/log_in_view.dart';
+import 'package:ai_chat_voice/views/log-in-view/register_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
 
-void main() {
+void main() async {
   // Initilize firebase
+  WidgetsFlutterBinding.ensureInitialized();
+/*  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );*/
+
   runApp(const MyApp());
 }
 
@@ -35,18 +43,55 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: BlocProvider(
-        create: (context) => NavBloc(),
-        child: BlocBuilder<NavBloc, NavState>(
-          builder: (context, state) {
-            if (state is NavStateInHomePageView) {
-              return LogInView();
-              //return const ChatGPT3View();
-            } else {
-              return LogInView();
-              //return const ChatGPT3View();
-            }
-          },
+      home: MultiRepositoryProvider(
+        providers: [
+          RepositoryProvider<FBAuthService>(
+            create: (context) {
+              return FBAuthService();
+            },
+          ),
+          RepositoryProvider<FirestoreService>(
+            create: (context) {
+              return FirestoreService(
+                provider: FirestoreProvider(),
+              );
+            },
+          )
+        ],
+        child: MultiBlocProvider(
+          providers: [
+            BlocProvider<AuthBloc>(
+              create: (context) => AuthBloc(
+                myFBAuthService: context.read<FBAuthService>(),
+              ),
+            ),
+          ],
+          child: BlocBuilder<AuthBloc, AuthState>(
+            builder: (context, state) {
+              if (state is AuthStateUninitilizedFirebase) {
+                context
+                    .read<AuthBloc>()
+                    .add(const AuthEventInitilizeFirebase());
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (state is AuthStateLoggedIn) {
+                return const HomePage();
+              } else if (state is AuthStateInRegisterProcess) {
+                return const RegisterView();
+              } else if (state is AuthStateNotLoggedIn) {
+                return const LogInView();
+              } else if (state is AuthStateInRegisterProcess) {
+                return const RegisterView();
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+                // return const ChatGPT3View();
+              }
+            },
+          ),
         ),
       ),
     );

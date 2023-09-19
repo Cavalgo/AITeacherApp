@@ -44,6 +44,10 @@ dependencies:
   firebase_core: ^2.15.0
   firebase_auth: ^4.7.1
   cloud_firestore: ^4.8.3
+  firebase_storage: ^11.2.5
+  equatable: ^2.0.5
+  wakelock: ^0.6.2
+  cached_network_image: ^3.2.3
 
 dev_dependencies:
   flutter_test:
@@ -71,6 +75,7 @@ flutter:
   assets:
   - assets/images/
   - assets/sounds/
+  - assets/icons/
      
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -85,12 +90,27 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
+    - family: Helvetica
+      fonts:
+        - asset: assets/fonts/Helvetica.ttf
+        - asset: assets/fonts/Helvetica-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Helvetica-BoldOblique.ttf
+          style: italic
+        - asset: assets/fonts/Helvetica-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Helvetica-LightOblique-02.ttf
+          weight: 300
+          style: italic
+        - asset: assets/fonts/Helvetica-Oblique-03.ttf
+          style: italic
     - family: 'Cera Pro'
       fonts:
         - asset: assets/fonts/Cera-Pro-Bold.otf
           weight: 700
         - asset: assets/fonts/Cera-Pro-Medium.otf
           weight: 500
+      
 
 
          

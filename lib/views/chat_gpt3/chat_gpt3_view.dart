@@ -1,13 +1,14 @@
 import 'dart:developer';
-import 'package:ai_chat_voice/bloc/conversation_bloc.dart';
-import 'package:ai_chat_voice/bloc/conversation_event.dart';
-import 'package:ai_chat_voice/bloc/conversation_state.dart';
+import 'package:ai_chat_voice/bloc/conversation_bloc/conversation_bloc.dart';
+import 'package:ai_chat_voice/bloc/conversation_bloc/conversation_state.dart';
 import 'package:ai_chat_voice/views/chat_gpt3/chat_app_bar.dart';
 import 'package:ai_chat_voice/views/chat_gpt3/user_message.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+import '../../bloc/conversation_bloc/conversation_event.dart';
 
 class ChatGPT3View extends StatefulWidget {
   const ChatGPT3View({super.key});
@@ -46,13 +47,11 @@ class _ChatGPT3ViewState extends State<ChatGPT3View>
     super.didChangeAppLifecycleState(state);
   }
 
-  void setFocusAndShowKeyboard(BuildContext context, FocusNode focusNode) {
-    FocusScope.of(context).requestFocus(focusNode);
-    SystemChannels.textInput.invokeMethod('TextInput.show');
-    log('Done');
-  }
-
   //late ScrollController myScrollController = ScrollController();
+  bool isCancelled(Offset offset, BuildContext context) {
+    log('Entramos');
+    return (offset.dx > (MediaQuery.of(context).size.width * 0.2));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -135,8 +134,8 @@ class _ChatGPT3ViewState extends State<ChatGPT3View>
                       child: Row(
                         children: [
                           GestureDetector(
-                            onLongPress: (isClickable)
-                                ? () {
+                            onLongPressDown: (isClickable)
+                                ? (_) {
                                     //Start Listening
                                     if (state is ConversationStateReady) {
                                       BlocProvider.of<ConversationBloc>(context)
@@ -155,8 +154,16 @@ class _ChatGPT3ViewState extends State<ChatGPT3View>
                                 : null,
                             onLongPressEnd: (isClickable)
                                 ? (details) {
-                                    BlocProvider.of<ConversationBloc>(context).add(
-                                        const ConversationEventStopListening());
+                                    if (isCancelled(
+                                        details.localPosition, context)) {
+                                      BlocProvider.of<ConversationBloc>(context)
+                                          .add(
+                                              const ConversationEventCancelListening());
+                                    } else {
+                                      BlocProvider.of<ConversationBloc>(context)
+                                          .add(
+                                              const ConversationEventStopListening());
+                                    }
                                     //Stop listening
                                   }
                                 : null,

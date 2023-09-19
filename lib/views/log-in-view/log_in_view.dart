@@ -1,4 +1,7 @@
+import 'package:ai_chat_voice/bloc/auth_bloc/auth_bloc.dart';
+import 'package:ai_chat_voice/bloc/auth_bloc/auth_event.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LogInView extends StatefulWidget {
   const LogInView({super.key});
@@ -8,10 +11,20 @@ class LogInView extends StatefulWidget {
 }
 
 class _LogInViewState extends State<LogInView> {
+  late final TextEditingController _emailController;
+  late final TextEditingController _passwordController;
+  @override
+  void initState() {
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final myScreenWidth = MediaQuery.of(context).size.width;
-    //final myScreenHeight = MediaQuery.of(context).size.height;
+    final myScreenHeight = MediaQuery.of(context).size.height;
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
@@ -22,11 +35,14 @@ class _LogInViewState extends State<LogInView> {
             children: [
               const TopPartMenue(),
               Container(
+                height: myScreenHeight - (myScreenHeight * 0.33),
                 margin: const EdgeInsets.only(top: 40),
                 width: myScreenWidth * 0.9,
                 child: Column(
                   children: [
+//Password Text Field
                     TextField(
+                      controller: _emailController,
                       autocorrect: false,
                       enableSuggestions: true,
                       keyboardType: TextInputType.emailAddress,
@@ -52,6 +68,7 @@ class _LogInViewState extends State<LogInView> {
                     ),
 //Password Text Field
                     TextField(
+                      controller: _passwordController,
                       style: const TextStyle(letterSpacing: 2),
                       obscureText: true,
                       decoration: InputDecoration(
@@ -84,7 +101,7 @@ class _LogInViewState extends State<LogInView> {
                             style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.green),
+                                color: Colors.lightGreen),
                           ),
                         ),
                       ),
@@ -93,7 +110,10 @@ class _LogInViewState extends State<LogInView> {
                     Container(
                       margin: const EdgeInsets.only(top: 12),
                       width: myScreenWidth,
-                      child: const LogInButton(),
+                      child: LogInButton(
+                        email: _emailController,
+                        password: _passwordController,
+                      ),
                     ),
                     const SizedBox(
                       height: 25,
@@ -147,38 +167,44 @@ class _LogInViewState extends State<LogInView> {
                         ),
                       ),
                     ),
-                    Container(
-                      height: 200,
-                      alignment: Alignment.bottomCenter,
-                      padding: const EdgeInsets.only(bottom: 50),
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const SizedBox(width: 8.0),
-                                Text(
-                                  "Don't have an account?",
-                                  style: TextStyle(
-                                      color: Colors.grey[700], fontSize: 15),
-                                ),
-                                TextButton(
-                                  onPressed: () {},
-                                  child: const Text(
-                                    'Register',
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.green,
+                    Expanded(
+                      child: Container(
+                        margin: const EdgeInsets.only(bottom: 40),
+                        alignment: Alignment.bottomCenter,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TextButton(
+                              onPressed: () {
+                                context.read<AuthBloc>().add(
+                                      const AuthEventGoToRegister(),
+                                    );
+                              },
+                              child: Text.rich(
+                                TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: "Don't have an account?",
+                                      style: TextStyle(
+                                        color: Colors.grey[700],
+                                        fontSize: 15,
+                                      ),
                                     ),
-                                  ),
-                                )
-                              ],
+                                    const TextSpan(
+                                      text: "  Register",
+                                      style: TextStyle(
+                                          color: Colors.lightGreen,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
+                    )
                   ],
                 ),
               ),
@@ -199,7 +225,7 @@ class TopPartMenue extends StatelessWidget {
     final myScreenHeight = MediaQuery.of(context).size.height;
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: myScreenHeight * 0.33,
+      height: myScreenHeight * 0.28,
       child: Stack(
         children: [
           Container(
@@ -243,7 +269,7 @@ class TopPartMenue extends StatelessWidget {
               TextSpan(
                 children: [
                   TextSpan(
-                    text: 'Sign in to your',
+                    text: 'Log in to your',
                     style: TextStyle(
                       fontFamily: 'Roboto',
                       height: 1.1,
@@ -265,14 +291,13 @@ class TopPartMenue extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: '\nSing in to your Account',
+                    text: '\nLog in to your Account',
                     style: TextStyle(
                       height: 3,
                       fontFamily: 'Roboto',
                       fontWeight: FontWeight.w300,
                       color: Colors.white,
                       fontSize: 15,
-                      letterSpacing: -1,
                     ),
                   ),
                 ],
@@ -286,7 +311,9 @@ class TopPartMenue extends StatelessWidget {
 }
 
 class LogInButton extends StatelessWidget {
-  const LogInButton({super.key});
+  final TextEditingController email;
+  final TextEditingController password;
+  const LogInButton({super.key, required this.email, required this.password});
 
   @override
   Widget build(BuildContext context) {
@@ -304,7 +331,13 @@ class LogInButton extends StatelessWidget {
           ),
         ),
       ),
-      onPressed: () {},
+      onPressed: () {
+        context.read<AuthBloc>().add(AuthEventLogInWithEmail(
+              email.text,
+              password.text,
+              context,
+            ));
+      },
       child: const Text(
         'Login',
         style: TextStyle(

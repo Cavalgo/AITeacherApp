@@ -1,19 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../bloc/navigation_bloc/navigation_bloc.dart';
-import '../../bloc/navigation_bloc/navigation_event.dart';
 
 PreferredSizeWidget chatAppBar({
   required BuildContext context,
 }) {
   return AppBar(
     leading: IconButton(
-      onPressed: () {
-        BlocProvider.of<NavBloc>(context).add(
-          const NavEventGoToHomePageView(),
-        );
-      },
+      onPressed: () {},
       icon: const Icon(Icons.arrow_back),
     ),
     title: const Row(
